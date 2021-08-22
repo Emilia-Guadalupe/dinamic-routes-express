@@ -1,47 +1,12 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-const users = [];
-let counter = 1;
+const UserController = require('../Controllers/UserController');
 
-router.post('/user', (req, res) => {
+router.post('/user', (req, res) => UserController.addUser(req, res));
 
-  const {body} = req;
-  const {name} = body;
+router.get('/user', (req, res) => UserController.getUsers(req, res))
 
-  if(body && name) {
-
-    const data = {
-      id: counter,
-      name: name,
-    };
-    counter = counter + 1;
-
-    users.push(data);
-
-    return res.sendStatus(201);
-
-  } else {
-    return res.sendStatus(400);
-  }
-});
-
-router.get('/user', (req, res) => {
-  return res.json(users);
-})
-
-router.get('/user/:id', (req, res) => {
-  const { params } = req;
-
-  const user = users.find((user) => {
-    return user.id == params.id;
-  })
-
-  if(user) {
-    return res.json(user);
-  } else {
-    res.sendStatus(404)
-  };
-})
+router.get('/user/:id', (req, res) => UserController.getUserById(req, res))
 
 module.exports = router;
